@@ -38,20 +38,19 @@ TUKEY <- TukeyHSD(aov)
 
 generate_label_df <- function(TUKEY, variable){
 
-    # Extract labels and factor levels from Tukey post-hoc 
+    
     Tukey.levels <- TUKEY[[variable]][,4]
     Tukey.labels <- data.frame(multcompLetters(Tukey.levels)['Letters'])
 
-    #I need to put the labels in the same order as in the boxplot :
+    
     Tukey.labels$Treatment=rownames(Tukey.labels)
     Tukey.labels=Tukey.labels[order(Tukey.labels$Treatment) , ]
     return(Tukey.labels)
 }
 
-# Apply the function on my dataset
+
 LABELS=generate_label_df(TUKEY , "Treatment")
 
-# Draw the basic boxplot
 a=boxplot(AllData$Cylindrical.Volume ~ AllData$Treatment,
           ylim=c(min(AllData$Cylindrical.Volume, na.rm = TRUE),
                   1.1*max(AllData$Cylindrical.Volume, na.rm = TRUE)),
