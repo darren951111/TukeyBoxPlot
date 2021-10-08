@@ -61,10 +61,10 @@ a=boxplot(AllData$Cylindrical.Volume ~ AllData$Treatment,
           range = 0)
 
 
-# I want to write the letter over each box. Over is how high I want to write it.
+
 over=0.025*max( a$stats[nrow(a$stats),] )
 
-#Add the labels
+
 text(c(1:nlevels(AllData$Treatment)) , a$stats[nrow(a$stats),]+over ,
      LABELS[,1]  , col = "darkblue")
 ```
