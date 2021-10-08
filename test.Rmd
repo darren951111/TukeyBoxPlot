@@ -1,0 +1,72 @@
+---
+title: "test"
+author: "Connor Schmitz"
+date: "10/7/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+ResearchData <- read_excel("ResearchData.xlsx", sheet = "AllData")
+
+hist(AllData$Cylindrical.Volume, 
+     breaks = 25,
+     probability = TRUE,
+     main = "Cylindrical Volume (cm3) vs Water Height",
+     xlab = "Cylindrical Volume(cm3)")
+abline(v = median(AllData$Cylindrical.Volume),
+       col = "red",
+       lwd = 3)
+lines(density(AllData$Cylindrical.Volume), col = 4, lwd = 2)
+
+
+```
+
+```{r}
+
+AllData$Treatment <- factor(AllData$Treatment, levels=c("NFT", "0.5cm",
+                                                        "1.0cm", "2.0cm"))
+##############################
+
+aov <- aov(Cylindrical.Volume~Treatment, data=AllData)
+TUKEY <- TukeyHSD(aov)
+#plot(TUKEY , las=1 , col="brown" )
+
+generate_label_df <- function(TUKEY, variable){
+
+    # Extract labels and factor levels from Tukey post-hoc 
+    Tukey.levels <- TUKEY[[variable]][,4]
+    Tukey.labels <- data.frame(multcompLetters(Tukey.levels)['Letters'])
+
+    #I need to put the labels in the same order as in the boxplot :
+    Tukey.labels$Treatment=rownames(Tukey.labels)
+    Tukey.labels=Tukey.labels[order(Tukey.labels$Treatment) , ]
+    return(Tukey.labels)
+}
+
+# Apply the function on my dataset
+LABELS=generate_label_df(TUKEY , "Treatment")
+
+# Draw the basic boxplot
+a=boxplot(AllData$Cylindrical.Volume ~ AllData$Treatment,
+          ylim=c(min(AllData$Cylindrical.Volume, na.rm = TRUE),
+                  1.1*max(AllData$Cylindrical.Volume, na.rm = TRUE)),
+          col = "lightgreen",
+          main = "Cylindrical Volume (cm3) vs Water Height",
+          xlab = "Treatment (Water Height [cm])",
+          ylab = "Cylindrical Volume (cm3)",
+          range = 0)
+
+
+# I want to write the letter over each box. Over is how high I want to write it.
+over=0.025*max( a$stats[nrow(a$stats),] )
+
+#Add the labels
+text(c(1:nlevels(AllData$Treatment)) , a$stats[nrow(a$stats),]+over ,
+     LABELS[,1]  , col = "darkblue")
+```
+
