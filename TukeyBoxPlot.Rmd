@@ -10,13 +10,25 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+library(readxl)  #import library
+AllData <- read_excel("ResearchData.xlsx", sheet = "AllData") #Assign sheet to variable.
+```
+# Above, replace excel file with your own.  
+# Include excel file in the same folder as the script, or set path.
+# Below, replace the following:
+    # Treatment --> Your treatment coloumn.
+    # Cylindrical.Volume --> Your data column.
+    # levels=c("Treatment Labels", "1", "2", "etc")
+    # main, xlab, and ylab to proper labels.
+    
+```{r}
 AllData$Treatment <- factor(AllData$Treatment, levels=c("NFT", "0.5cm",
                                                         "1.0cm", "2.0cm"))
 ##############################
 
 aov <- aov(Cylindrical.Volume~Treatment, data=AllData)
 TUKEY <- TukeyHSD(aov)
-#plot(TUKEY , las=1 , col="brown" )
+#plot(TUKEY , las=1 , col="brown" )  #Remove hash to show tukey plot.
 
 generate_label_df <- function(TUKEY, variable){
     
@@ -31,13 +43,13 @@ generate_label_df <- function(TUKEY, variable){
 LABELS=generate_label_df(TUKEY , "Treatment")
 
 a=boxplot(AllData$Cylindrical.Volume ~ AllData$Treatment,
-          ylim=c(min(AllData$Cylindrical.Volume, na.rm = TRUE),
+          ylim=c(min(AllData$Cylindrical.Volume, na.rm = TRUE), # na.rm is optional.  Include if your data has NA or missing points.
                   1.1*max(AllData$Cylindrical.Volume, na.rm = TRUE)),
           col = "lightgreen",
           main = "Cylindrical Volume (cm3) vs Water Height",
           xlab = "Treatment (Water Height [cm])",
           ylab = "Cylindrical Volume (cm3)",
-          range = 0)
+          range = 0) # Removal recommended. This will alter whiskers.
 
 over=0.025*max( a$stats[nrow(a$stats),] )
 
