@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+library(ggplot2)
+library(multcompView)
 library(readxl)  #import library
 AllData <- read_excel("ResearchData.xlsx", sheet = "AllData") #Assign sheet to variable.
 ```
