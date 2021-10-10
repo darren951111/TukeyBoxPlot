@@ -50,8 +50,7 @@ a=boxplot(AllData$Cylindrical.Volume ~ AllData$Treatment,
           col = "lightgreen",
           main = "Cylindrical Volume (cm3) vs Water Height",
           xlab = "Treatment (Water Height [cm])",
-          ylab = "Cylindrical Volume (cm3)",
-          range = 0) # Removal recommended. This will alter whiskers.
+          ylab = "Cylindrical Volume (cm3)")
 
 over=0.025*max( a$stats[nrow(a$stats),] )
 
