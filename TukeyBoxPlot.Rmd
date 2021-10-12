@@ -56,5 +56,5 @@ over=0.025*max( a$stats[nrow(a$stats),] )
 
 text(c(1:nlevels(AllData$Treatment)) , a$stats[nrow(a$stats),]+over ,
      LABELS[,1]  , col = "darkblue")
-```
+``` 
 
